@@ -3,7 +3,7 @@
 
 Member1: Kyle James Dampier
 
-Member2: 
+Member2: Yuko Matsumoto
 
 Member3: 
 
