@@ -5,6 +5,6 @@ Member1: Kyle James Dampier
 
 Member2: Yuko Matsumoto
 
-Member3: Hyeong been Joo
+Member3: Hyeongbeen Joo
 
 Member4: Dylan Morrissey
