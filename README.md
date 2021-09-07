@@ -1,5 +1,5 @@
 # 11248EcoGator4
-The Tide Prediction Web Application
+## The Tide Prediction Web Application
 
 Member1: Kyle James Dampier
 
