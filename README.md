@@ -1,4 +1,4 @@
-# 11248EcoGator4 test conflict
+# 11248EcoGator4
 The Tide Prediction Web Application
 
 Member1: Kyle Dampier
