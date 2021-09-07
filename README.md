@@ -1,10 +1,10 @@
 # 11248EcoGator4
 The Tide Prediction Web Application
 
-Member1: Kyle Dampier
+Member1: 
 
-Member2: Yuko Matsumoto
+Member2: 
 
-Member3: Hyeongbeen Joo
+Member3: 
 
 Member4: Dylan Morrissey
