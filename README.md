@@ -3,8 +3,8 @@
 
 Member1: Kyle James Dampier
 
-Member2: Yuko Matsumoto
+Member2: 
 
-Member3: Hyeongbeen Joo
+Member3: 
 
 Member4: Dylan Morrissey
