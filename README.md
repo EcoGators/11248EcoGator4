@@ -12,7 +12,7 @@ Member3: Hyeongbeen Joo (Development Team)
 
 Member4: Dylan Morrissey (Development Team) 
 
-# What will your team build and what tools/programming language will your team use? :
+# What will your team build and what tools/programming language will your team use? 
 
 We are building a data-driven tide forecasting web application by using machine learning (ML) techniques. The programming language will be used is React (front-end JavaScript library for building user interfaces). We will also use the React libraries Material-UI and Google Charts to help visualize the data in a clean webpage. We plan to use the Tommorrow.io API for general information and actual tide data from NOAA to train our models. We will use Tensorflow to train our machine learning models.
 
