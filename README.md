@@ -2,8 +2,6 @@
 ## The Tide Atlas 
 Problem Statement 1: Climate Change Related Problems
 
-The Tide Prediction Web Application to help fishermen
-
 Member1: Kyle James Dampier (Product Manager) 
 
 Member2: Yuko Matsumoto (Scrum Master) 
