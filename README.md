@@ -18,7 +18,7 @@ The data-driven web application for reading and understanding the effects of tid
 
 We are building a data-driven tide forecasting web application by using machine learning (ML) techniques. The programming language will be used is React (front-end JavaScript library for building user interfaces). We will also use the React libraries Material-UI and Google Charts to help visualize the data in a clean webpage. We plan to use the Tommorrow.io API for general information and actual tide data from NOAA to train our models. We will use Tensorflow to train our machine learning models.
 
-# Challenge Statement addressed and how your product contributes.
+# Challenge Statement addressed and how our product contributes.
 
 Climate change affects every living being. Consistently rising temperatures rises the sea level and effects people's daily lives. Warming oceans affects how wildlife live. Our tide prediction web application provides fishermen with accurate predictions to help them plan their fishing trips according to the changing climate, as well as provide people with more data and information regarding our changing climate. Our Tide Prediction web application will allow fishermen, and/or suppliers to evaluate climate-related fishing risks by forecasting tide with our machine learning model that trained by many years of historical data and evaluate risks over the short and long term. This can help not just fishermen, but rising water levels also effect building development near the coast and many other extremely expensive and long term issues. Our goal for the product is to provide people with the information needed to make educated decisions on problems regarding the coastline both presently and in the future.
 
