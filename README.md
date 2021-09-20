@@ -1,6 +1,7 @@
 # 11248EcoGator4
 ## The Tide Atlas 
 - Problem Statement 1: Climate Change Related Problems
+
 The data-driven web application for reading and understanding the effects of tides in your area. View heat maps and tide charts showing current tides and tide predictions in many intuitive formats.
 
 Member1: Kyle James Dampier (Product Manager) 
