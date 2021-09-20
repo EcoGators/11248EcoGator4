@@ -1,6 +1,7 @@
 # 11248EcoGator4
 ## The Tide Atlas 
-Problem Statement 1: Climate Change Related Problems
+- Problem Statement 1: Climate Change Related Problems
+The data-driven web application for reading and understanding the effects of tides in your area. View heat maps and tide charts showing current tides and tide predictions in many intuitive formats.
 
 Member1: Kyle James Dampier (Product Manager) 
 
@@ -10,11 +11,7 @@ Member3: Hyeongbeen Joo (Development Team)
 
 Member4: Dylan Morrissey (Development Team) 
 
-**The Tide Atlas**
-
-The data-driven web application for reading and understanding the effects of tides in your area. View heat maps and tide charts showing current tides and tide predictions in many intuitive formats.
-
-- What will your team build and what tools/programming language will your team use? :
+# What will your team build and what tools/programming language will your team use? :
 
 We are building a data-driven tide forecasting web application by using machine learning (ML) techniques. The programming language will be used is React (front-end JavaScript library for building user interfaces). We will also use the React libraries Material-UI and Google Charts to help visualize the data in a clean webpage. We plan to use the Tommorrow.io API for general information and actual tide data from NOAA to train our models. We will use Tensorflow to train our machine learning models.
 
