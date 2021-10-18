@@ -1,23 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import MapView from 'react-native-maps';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
+import {StatusBar} from 'expo-status-bar';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Profile from './Profile';
+import Map from './Map';
+import MenuIcon from './components/MenuIcon';
 
 export default function App() {
+  const Drawer = createDrawerNavigator();
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <MapView style={{height: '50%', width: '100%'}} /> 
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+        <NavigationContainer>
+          <Drawer.Navigator
+            screenOptions={{headerShown: true, headerLeft: () => <MenuIcon />}}>
+            <Drawer.Screen name='Map' component={Map} />
+            <Drawer.Screen name='Profile' component={Profile} />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      <StatusBar style='auto' />
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
