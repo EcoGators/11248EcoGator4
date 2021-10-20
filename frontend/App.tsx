@@ -3,9 +3,9 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {StatusBar} from 'expo-status-bar';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import Profile from './Profile';
-import Map from './Map';
 import MenuIcon from './components/MenuIcon';
+import Map from './Map';
+import Profile from './Profile';
 
 export default function App() {
   const Drawer = createDrawerNavigator();
