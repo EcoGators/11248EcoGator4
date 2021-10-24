@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from time import process_time, sleep
 
 def get_scaled_num(num, max, target):
     return num / max * (target)
@@ -10,6 +11,9 @@ def generate_heatmap_data(depth_data, width, height, top_left, bot_right):
     # height = <num pixels height>
     # top_left = <top left long, lat> 
     # top_right = <bottom right long, lat>
+
+    # change this for less accurate
+    start = process_time()
 
     print(f"width: {width}, height: {height}")
     
@@ -29,6 +33,7 @@ def generate_heatmap_data(depth_data, width, height, top_left, bot_right):
         x = int(abs(get_scaled_num(relative_long, degree_width, width)))
         y = int(abs(get_scaled_num(relative_lat, degree_height, height)))
         # print(f"Known Point: {x}, {y}, depth: {data['data']}")
+
 
         generated_points[x][y] = data['long']
         known_points.append([x, y, data['data']])
@@ -53,5 +58,8 @@ def generate_heatmap_data(depth_data, width, height, top_left, bot_right):
                 weighted_avg += known_points[k][2] * distances[k] / dist_sum
 
             generated_points[i][j] = weighted_avg
+
+    end = process_time()
+    print(f"{end-start} seconds")
 
     return generated_points
