@@ -1,14 +1,23 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {StatusBar} from 'expo-status-bar';
-import MapView from 'react-native-maps';
+import MapView, { Overlay } from 'react-native-maps';
 
 interface IProfileProps {}
 
 const Map: React.FunctionComponent<IProfileProps> = (props) => {
   return (
     <View style={styles.container}>
-      <MapView style={{height: '100%', width: '100%'}} /> 
+      <MapView
+        style={{height: '100%', width: '100%'}}
+        initialRegion={{
+          latitude: 25,
+          longitude: -80,
+          latitudeDelta: 6,
+          longitudeDelta: 8,
+        }}
+      /> 
+      <Overlay image={require('./test_figure.png')} bounds={[[25, -80], [31, -88]]} tappable={true}/>
       <StatusBar style="auto" />
     </View>
   );
@@ -22,4 +31,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})
