@@ -85,8 +85,9 @@ def generate_heatmap_data(depth_data, width, height, top_left, bot_right):
     dpi = 80
     f, ax = plt.subplots(figsize=(width/dpi, height/dpi), dpi=dpi)
     ax = sns.heatmap(generated_points, cbar=False, xticklabels=False, yticklabels=False, center=0)
-
-    plt.box(False)
-
     f.savefig('heatmap.jpeg', pad_inches=0.0, bbox_inches='tight', dpi=dpi)
+
+    # Uncomment to reset tests
+    # generated_points.tofile('example_heatmap_data.txt')
+
     return generated_points
