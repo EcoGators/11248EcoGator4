@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import {StatusBar} from 'expo-status-bar';
-import MapView, { Overlay } from 'react-native-maps';
+import MapView, {Heatmap, Overlay, WeightedLatLng} from 'react-native-maps';
 
 interface IProfileProps {}
 

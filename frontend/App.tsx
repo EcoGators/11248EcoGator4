@@ -7,6 +7,7 @@ import MenuIcon from './components/MenuIcon';
 import Map from './Map';
 import Chart from './Chart';
 import Profile from './Profile';
+import HeatmapCanvas from './HeatmapCanvas';
 
 export default function App() {
   const Drawer = createDrawerNavigator();
@@ -18,6 +19,7 @@ export default function App() {
             <Drawer.Screen name='Map' component={Map} />
             <Drawer.Screen name='Chart' component={Chart} />
             <Drawer.Screen name='Profile' component={Profile} />
+            <Drawer.Screen name='Heatmap' component={HeatmapCanvas} />
           </Drawer.Navigator>
         </NavigationContainer>
       <StatusBar style='auto' />
