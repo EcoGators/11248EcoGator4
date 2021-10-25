@@ -1,6 +1,19 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
 import math
 from time import process_time, sleep
+from PIL import Image
+
+def normalize_2d_array(arr, arr_min=0, arr_max=1):
+    amax = 1
+    amin = arr[np.unravel_index(arr.argmin(), arr.shape)[0]]
+    arr = (arr-amin)*(arr_max-arr_min)
+    denom = amax - amin
+    denom[denom==0] = 1
+    for i in range(len(arr)):
+        arr[i] = arr[i] * 255
+    return arr.astype(np.int8)
 
 def get_scaled_num(num, max, target):
     return num / max * (target)
@@ -34,19 +47,26 @@ def generate_heatmap_data(depth_data, width, height, top_left, bot_right):
         y = int(abs(get_scaled_num(relative_lat, degree_height, height)))
         # print(f"Known Point: {x}, {y}, depth: {data['data']}")
 
-
         generated_points[x][y] = data['long']
         known_points.append([x, y, data['data']])
 
     for i in range(width):
         for j in range(height):
-            distances = []
             # check if in known_points
+            found_known_points = False
             for pt in known_points:
                 if i == pt[0] and j == pt[1]:
                     print(f"found point {i}, {j}")
                     generated_points[i][j] = pt[2]
+                    found_known_points = True
                     continue
+
+            if found_known_points:
+                continue
+            
+            # get distance from current point
+            distances = []
+            for pt in known_points:
                 dist = math.sqrt((pt[0] - i)**2 + (pt[1] - j)**2)
                 distances.append(dist)
             
@@ -61,5 +81,13 @@ def generate_heatmap_data(depth_data, width, height, top_left, bot_right):
 
     end = process_time()
     print(f"{end-start} seconds")
+    arr_norm = normalize_2d_array(generated_points)
+    print(arr_norm)
+
+    # im = Image.fromarray(np.asarray(arr_norm), mode="L")
+    # im.save("heatmap.jpeg")
+
+    sns.heatmap(generated_points)
+    plt.savefig('heatmap.jpeg')
 
     return generated_points
