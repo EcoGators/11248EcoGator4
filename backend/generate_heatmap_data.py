@@ -81,13 +81,12 @@ def generate_heatmap_data(depth_data, width, height, top_left, bot_right):
 
     end = process_time()
     print(f"{end-start} seconds")
-    arr_norm = normalize_2d_array(generated_points)
-    print(arr_norm)
 
-    # im = Image.fromarray(np.asarray(arr_norm), mode="L")
-    # im.save("heatmap.jpeg")
+    dpi = 80
+    f, ax = plt.subplots(figsize=(width/dpi, height/dpi), dpi=dpi)
+    ax = sns.heatmap(generated_points, cbar=False, xticklabels=False, yticklabels=False, center=0)
 
-    sns.heatmap(generated_points)
-    plt.savefig('heatmap.jpeg')
+    plt.box(False)
 
+    f.savefig('heatmap.jpeg', pad_inches=0.0, bbox_inches='tight', dpi=dpi)
     return generated_points
