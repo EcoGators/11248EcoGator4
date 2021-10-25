@@ -1,5 +1,5 @@
 # pull base image
-FROM node:14.13.1-buster-slim
+FROM node:latest
 
 # set our node environment, either development or production
 # defaults to production, compose overrides this to development on build and run
@@ -22,7 +22,7 @@ RUN mkdir /opt/frontend && chown node:node /opt/frontend
 WORKDIR /opt/frontend
 ENV PATH /opt/frontend/.bin:$PATH
 USER node
-COPY ./frontend/package.json ./frontend/package-lock.json ./
+COPY --chown=node:node ./frontend/package.json ./frontend/package-lock.json ./
 RUN npm install --unsafe-perm=true
 
 # copy in our source code last, as it changes the most
