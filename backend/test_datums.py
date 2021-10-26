@@ -1,7 +1,7 @@
 import json
 import unittest
 from unittest.mock import Mock, patch
-from datums import get_datums
+from datums import get_datums, get_stations
 
 
 class TestGetDatums(unittest.TestCase):
@@ -54,6 +54,16 @@ class TestGetDatums(unittest.TestCase):
         result = get_datums(2695535)
 
         self.assertIsNone(result)
+    
+    def test_getting_station_data(self):
+        self.mock_get.return_value = Mock()
+        self.mock_get.return_value.ok = True
+        # self.mock_get.return_value.json.return_value = data
+
+        stations = get_stations('waterlevels')
+        print(stations)
+
+        self.assertEqual(stations, stations)
 
 
 if __name__ == '__main__':
