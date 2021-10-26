@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import {StatusBar} from 'expo-status-bar';
-import MapView, { Overlay, OverlayComponent } from 'react-native-maps';
+import MapView, { Overlay } from 'react-native-maps';
 
 interface IProfileProps {}
 interface IMapState {
@@ -49,16 +49,16 @@ class Map extends React.Component<IProfileProps, IMapState> {
           onRegionChangeComplete={(event) => {
             console.log(event);
           }}
+          provider={'google'}
         >
 
           {this.state.loaded && (
             <Overlay 
               image={require("./test_figure.png")}
-              bounds={[[26.826722, -82.444167], [26.016734, -81.309390]]}
-              style={{
-                
-              }}
-              tappable={false} />
+              bounds={[[26.016734, -82.444167], [26.826722, -81.309390]]}
+              opacity={0.5}
+              tappable={false} 
+            />
           )}
 
         </MapView>
