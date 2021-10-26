@@ -22,7 +22,7 @@ RUN mkdir /opt/frontend && chown node:node /opt/frontend
 WORKDIR /opt/frontend
 ENV PATH /opt/frontend/.bin:$PATH
 USER node
-COPY --chown=node:node ./frontend/package.json ./frontend/package-lock.json ./
+COPY --chown=node:node ./package.json ./package-lock.json ./
 RUN npm install --unsafe-perm=true
 
 # copy in our source code last, as it changes the most
