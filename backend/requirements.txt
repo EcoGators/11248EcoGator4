@@ -1,1 +1,5 @@
-Flask==2.0.2
+Flask
+numpy
+pandas
+requests
+seaborn

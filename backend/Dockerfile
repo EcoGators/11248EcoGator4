@@ -1,16 +1,15 @@
-FROM ubuntu:16.04
+FROM python:3.9-buster
 
-RUN apt-get update -y && \
-    apt-get install -y python-pip python-dev
-
-# We copy just the requirements.txt first to leverage Docker cache
-COPY ./requirements.txt /backend/requirements.txt
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
 
 WORKDIR /backend
 
-RUN pip install -r requirements.txt
+COPY requirements.txt .
+RUN pip3 install Flask seaborn requests pandas numpy matplotlib
 
-COPY . /backend/
+COPY . .
 
-ENTRYPOINT [ "python" ]
-CMD [ "app.py" ]
+EXPOSE 5000 
+
+ENTRYPOINT [ "python", '-m', 'flask', 'run' ]

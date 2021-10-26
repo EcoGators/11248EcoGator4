@@ -2,7 +2,6 @@ import sqlite3
 import datetime as dt
 import json
 import requests
-from init_db import init_db
 
 DB_PATH = 'asdf.db'
 
