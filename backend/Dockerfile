@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 5000 
 
-ENTRYPOINT [ "python", '-m', 'flask', 'run' ]
+CMD [ "flask", "run" ]
