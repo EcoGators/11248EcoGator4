@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from "react-native";
 import base from './styles/base';
-import { VictoryBar, VictoryChart, VictoryTheme } from "victory-native";
+import { VictoryBar, VictoryChart, VictoryTheme } from "victory";
 
 const data = [
     { quarter: 1, earnings: 13000 },

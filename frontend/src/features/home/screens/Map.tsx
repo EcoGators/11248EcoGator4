@@ -56,7 +56,7 @@ class Map extends React.Component<IProfileProps, IMapState> {
             <Overlay 
               image={require("./test_figure.png")}
               bounds={[[26.016734, -82.444167], [26.826722, -81.309390]]}
-              opacity={0.5}
+              //opacity={0.5}
               tappable={false} 
             />
           )}

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "the-tide-atlas",
-    "slug": "the-tide-atlas",
+    "name": "expo-firebase-authentication",
+    "slug": "expo-firebase-authentication",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
