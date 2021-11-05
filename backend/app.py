@@ -3,6 +3,8 @@ from datetime import date
 import sqlite3
 from elevation import get_elevation
 from datums import get_datums
+import pandas as pd
+from datetime import datetime
 
 DB_PATH = 'asdf.db'
 
@@ -67,4 +69,23 @@ def datums(station):
     data = get_datums(station)
     if data is None:
         return Response("400 Bad Request", status=400)
+    return data
+
+
+@app.route("/heatmap/<date>/<time>/<datum>")
+def heatmap(date, time, datum):
+    long = request.args.get('long')
+    lat = request.args.get('lat')
+    coord_w = request.args.get('coord_w')
+    coord_h = request.args.get('coord_h')
+
+    try:
+        long = float(long)
+        lat = float(lat)
+        coord_w = float(coord_w)
+        coord_h = float(coord_h)
+        converted_date = datetime.strptime(date + " " + time, '%Y%m%d ')
+    except:
+        return Response("400 Bad Request", status=400)
+
     return data
