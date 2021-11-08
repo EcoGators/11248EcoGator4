@@ -93,9 +93,9 @@ export default class Home extends Component {
             style={{
               margin: 0,
               top: 'auto',
-              right: 20,
+              right: 'auto',
               bottom: 75,
-              left: 'auto',
+              left: 20,
               position: 'fixed',
             }} 
             size="large" 
