@@ -5,6 +5,7 @@ import numpy as np
 import unittest
 from unittest.mock import patch
 
+
 class TestDatumsRoute(unittest.TestCase):
 
     def test_heatmap_is_ok(self):
@@ -33,11 +34,12 @@ class TestDatumsRoute(unittest.TestCase):
         top_left = [26.826722, -82.444167]
         bot_right = [26.016734, -81.309390]
 
-        gen_data = generate_heatmap_data(depth_data, width, height, top_left, bot_right)
-        test_file = np.fromfile('example_heatmap_data.txt')
+        gen_data = generate_heatmap_data(
+            depth_data, width, height, top_left, bot_right)
+        # test_file = np.fromfile('example_heatmap_data.txt')
 
-        self.assertEqual(gen_data.tolist(), test_file.reshape(width, height).tolist(),)
-        
+        self.assertEqual(gen_data.tolist(),
+                         test_file.reshape(width, height).tolist(),)
 
 
 if __name__ == '__main__':
