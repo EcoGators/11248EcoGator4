@@ -60,6 +60,7 @@ export default class Home extends Component {
         heatmap={testData}
       >
         <Marker position={props.mapCenter} />
+        
       </GoogleMap>
     ));
 
@@ -107,7 +108,7 @@ export default class Home extends Component {
             <PollIcon />
         </Fab>
 
-        <BottomNav selected={1} />
+        <BottomNav/>
       </Grid>
     )
   }
