@@ -3,10 +3,10 @@ import Image from 'next/image'
 import { Container, Grid, Typography, Fab, CircularProgress } from '@material-ui/core'
 import styles from '../styles/Home.module.css'
 import BottomNav from '../components/bottomNav'
+import HeatMap from '../components/HeatMap';
 import PollIcon from '@material-ui/icons/Poll';
 import React, { Component } from 'react';
 import { io } from 'socket.io-client';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, OverlayView } from "react-google-maps"
 
 const testData = [
     {
@@ -51,18 +51,6 @@ export default class Home extends Component {
 
   render() {
     console.log("render");
-    const MapComponent = withScriptjs(withGoogleMap(props =>
-      <GoogleMap
-        ref={(map) => { console.log(map); }}
-        defaultZoom={10}
-        defaultCenter={props.mapCenter}
-        onIdle={() => props.onIdle}
-        heatmap={testData}
-      >
-        <Marker position={props.mapCenter} />
-        
-      </GoogleMap>
-    ));
 
     return (
       <Grid>
@@ -74,19 +62,7 @@ export default class Home extends Component {
         </Head>
 
         <main>
-          {this.state.hasLocation && <MapComponent 
-            containerElement={<div style={{position: 'fixed', bottom: 55, left: 0, right: 0, top: 0}} />}
-            mapElement={<div style={{ height: `100%` }} />}
-            loadingElement={<CircularProgress />}
-            googleMapURL={"https://maps.googleapis.com/maps/api/js?key=AIzaSyBrP7CiMgD8kHYwIxKTU11FfP4CI0Gzfzw&v=3.exp&libraries=places,visualization"}
-            mapCenter={this.state.center}
-            onIdle={() => {
-              console.log("onIdle");
-              let nw = this.map.getBounds().getNorthWest();
-              let se = this.map.getBounds().getSouthEast();
-              this.socket.send("[[" + nw.lat() + ", " + nw.lng() + "], [" + se.lat() + ", " + se.lng() + "]]", this.count++);
-            }}
-          />}
+          {this.state.hasLocation && <HeatMap/>}
           {!this.state.hasLocation && <CircularProgress />}
         </main>
 
