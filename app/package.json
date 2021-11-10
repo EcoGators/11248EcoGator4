@@ -16,6 +16,7 @@
     "next": "12.0.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-google-maps": "^9.4.5",
     "socket.io": "^4.3.1",
     "socket.io-client": "^4.3.2",
     "tls": "^0.0.1",

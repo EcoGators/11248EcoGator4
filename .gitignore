@@ -1,6 +1,9 @@
 frontend/node_modules/
+app/node_modules/
+app/.next/
 server/node_modules/
 .expo/
+.idea/
 npm-debug.*
 *.jks
 *.p8
