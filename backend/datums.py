@@ -1,4 +1,5 @@
 import requests
+from pandas import DataFrame
 from schema import Station
 
 
@@ -36,3 +37,23 @@ def get_datums(station_id):
             result[datum_name] = json[datum_name]
 
     return result
+
+
+def get_predictions(begin_date, end_date, datum, station, time_zone):
+    url = f"https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=predictions&begin_date={begin_date}&end_date={end_date}&datum={datum}&station={station}&time_zone={time_zone}&units=english&format=json"
+    response = requests.get(url)
+
+    if not response.ok:
+        return None
+
+    return DataFrame.from_records(response.json()["predictions"])
+
+
+def get_water_level(begin_date, end_date, datum, station, time_zone):
+    url = f"https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?product=water_level&begin_date={begin_date}&end_date={end_date}&datum={datum}&station={station}&time_zone={time_zone}&units=english&format=json"
+    response = requests.get(url)
+
+    if not response.ok:
+        return None
+
+    return DataFrame.from_records(response.json()["data"])
