@@ -31,10 +31,6 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.map = React.createRef();
-    this.socket = io("ws://localhost:8080");
-    this.socket.on('message', (data) => {
-      console.log("socket data", data);
-    });
     this.state = {
       center: {lat: 0, lng: 0},
       hasLocation: false,
@@ -78,7 +74,7 @@ export default class Home extends Component {
             size="large" 
             color="primary"
             onClick={() => {
-              this.socket.send("Fab Clicked");
+              // this.socket.send("Fab Clicked");
             }}
             >
             <PollIcon />

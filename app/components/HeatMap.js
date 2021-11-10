@@ -1,6 +1,7 @@
 /* global google */
 import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
+import { io } from 'socket.io-client'
 
 class HeatMap extends Component {
   static defaultProps = {
@@ -20,15 +21,21 @@ class HeatMap extends Component {
 					{lat: 26.64833, lng: -81.87167}
 				]
   	}
+    this.socket = io("ws://localhost:8080");
+    this.socket.on('message', (data) => {
+      console.log("socket data", data);
+    });
+
   }
 
   onMapChange({ center, zoom, bounds, marginBounds }) {
+    console.log(center, zoom, bounds, marginBounds)
     if (!this.state.heatmapVisible) {
       return
     }
     
-    console.log("onChange");
-    //this.socket.send(bounds, this.count++);
+    // console.log("onChange");
+    this.socket.send(bounds, this.count++);
   }
 
   toggleHeatMap() {    
@@ -44,7 +51,7 @@ class HeatMap extends Component {
 
   render() {
 
-  	const apiKey = {key: 'AIzaSyBrP7CiMgD8kHYwIxKTU11FfP4CI0Gzfzw'}
+  	const apiKey = { key: 'AIzaSyBrP7CiMgD8kHYwIxKTU11FfP4CI0Gzfzw' }
   	const heatMapData = {
   		positions: this.state.heatmapPoints,
 		options: {
