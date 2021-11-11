@@ -17,25 +17,19 @@ class HeatMap extends Component {
   	this.state = {
       heatmapVisible: true,
   		heatmapPoints: [
-		  		{lat: 26.13167, lng: -81.80833},
-					{lat: 26.64833, lng: -81.87167}
+		  		{lat: 26.13167, lng: -81.80833, weight: 1.2},
+					{lat: 26.64833, lng: -81.87167, weight: 0.7}
 				]
   	}
-    this.socket = io("ws://localhost:8080");
-    this.socket.on('message', (data) => {
-      console.log("socket data", data);
-    });
-
+    this.socket = props.socket;
+    this.socket.on('data', (data) => {
+      this.setState({heatmapPoints: data});
+    })
+    this.onMapUpdate = props.onMapChange;
   }
 
   onMapChange({ center, zoom, bounds, marginBounds }) {
-    console.log(center, zoom, bounds, marginBounds)
-    if (!this.state.heatmapVisible) {
-      return
-    }
-    
-    // console.log("onChange");
-    this.socket.send(bounds, this.count++);
+    this.onMapUpdate(bounds, this.state.heatmapVisible);
   }
 
   toggleHeatMap() {    
@@ -50,17 +44,15 @@ class HeatMap extends Component {
   }
 
   render() {
-
+    console.log(this.state);
   	const apiKey = { key: 'AIzaSyBrP7CiMgD8kHYwIxKTU11FfP4CI0Gzfzw' }
   	const heatMapData = {
   		positions: this.state.heatmapPoints,
-		options: {
-			radius: 20,
-			opacity: 0.6
-		}
+      options: {
+        radius: 75,
+        opacity: 0.4
+      }
   	}
-
-  	console.log(this.state)
 
     return (
       <div style={{ height: '100vh', width: '100%' }}>
@@ -71,6 +63,9 @@ class HeatMap extends Component {
           defaultZoom={this.props.zoom}
           heatmapLibrary={true}
           heatmap={heatMapData}
+          overlay={() => {
+            
+          }}
           onChange={this.onMapChange.bind(this)}
         >
         </GoogleMapReact>

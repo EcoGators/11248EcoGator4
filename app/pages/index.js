@@ -1,12 +1,14 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Container, Grid, Typography, Fab, CircularProgress } from '@material-ui/core'
+import { Grid, Fab, CircularProgress, Paper } from '@material-ui/core'
+import { TimePicker } from '@material-ui/pickers';
 import styles from '../styles/Home.module.css'
 import BottomNav from '../components/bottomNav'
 import HeatMap from '../components/HeatMap';
 import PollIcon from '@material-ui/icons/Poll';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { io } from 'socket.io-client';
+import CustomDateTimePicker from '../components/CustomDateTimePicker';
 
 const testData = [
     {
@@ -35,7 +37,21 @@ export default class Home extends Component {
       center: {lat: 0, lng: 0},
       hasLocation: false,
     }
+    var coeff = 1000 * 60 * 6;
+    var date = new Date();
+    var rounded = new Date(Math.round(date.getTime() / coeff) * coeff)
+
+    this.socket = io("ws://localhost:8080");
+    this.socket.on('data', (data) => {
+      console.log(data);
+    })
     this.count = 0;
+    this.state.selectedDate = rounded;
+    this.socket.send({date: rounded, time: rounded});
+    this.handleDateChange = (val) => {
+      console.log(val);
+      this.state.time = new Date();
+    }
   }
 
   componentDidMount() {
@@ -46,8 +62,6 @@ export default class Home extends Component {
   }
 
   render() {
-    console.log("render");
-
     return (
       <Grid>
         <Head>
@@ -58,11 +72,24 @@ export default class Home extends Component {
         </Head>
 
         <main>
-          {this.state.hasLocation && <HeatMap/>}
-          {!this.state.hasLocation && <CircularProgress />}
-        </main>
-
-        <Fab 
+          {this.state.hasLocation && <HeatMap 
+            socket={this.socket}
+            onMapChange={(bounds, isVisible) => {
+              console.log("changed", bounds);
+              if (!isVisible) {
+                return
+              }
+          
+              bounds['width'] = window.innerWidth;
+              bounds['height'] = window.innerHeight;
+              bounds['time'] = this.state.selectedDate;
+              
+              console.log(bounds);
+              this.socket.send(bounds);
+            }}
+          />}
+          {!this.state.hasLocation && <CircularProgress/>}
+          <Fab 
             style={{
               margin: 0,
               top: 'auto',
@@ -77,10 +104,34 @@ export default class Home extends Component {
               // this.socket.send("Fab Clicked");
             }}
             >
-            <PollIcon />
-        </Fab>
+              <PollIcon />
+          </Fab>
+          <Paper 
+          elevation={3}
+          style={{
+            margin: 0,
+            top: 'auto',
+            right: 75,
+            bottom: 75,
+            left: 'auto',
+            position: 'fixed',
+          }}>
+            <CustomDateTimePicker 
+              handleDateChange={(v) => {
+                this.socket.send({date: v});
+                this.setState({selectedDate: v});
+              }}
+              handleTimeChange={(v) => {
+                this.socket.send({time: v});
+                this.setState({selectedDate: v});
+              }}
+              selectedDate={this.state.selectedDate}
+            />
+          </Paper>
 
-        <BottomNav/>
+          <BottomNav/>
+        </main>
+
       </Grid>
     )
   }
