@@ -1,7 +1,7 @@
 /* global google */
 import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
-import { io } from 'socket.io-client'
+import GeneratedHeatMap from '../components/GeneratedHeatMap'
 
 class HeatMap extends Component {
   static defaultProps = {
@@ -16,10 +16,8 @@ class HeatMap extends Component {
   	super(props)
   	this.state = {
       heatmapVisible: true,
-  		heatmapPoints: [
-		  		{lat: 26.13167, lng: -81.80833, weight: 1.2},
-					{lat: 26.64833, lng: -81.87167, weight: 0.7}
-				]
+  		heatmapPoints: [],
+      currentBounds: null
   	}
     this.socket = props.socket;
     this.socket.on('data', (data) => {
@@ -30,6 +28,7 @@ class HeatMap extends Component {
 
   onMapChange({ center, zoom, bounds, marginBounds }) {
     this.onMapUpdate(bounds, this.state.heatmapVisible);
+    this.setState({currentBounds: bounds});
   }
 
   toggleHeatMap() {    
@@ -61,13 +60,20 @@ class HeatMap extends Component {
           bootstrapURLKeys={apiKey}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
-          heatmapLibrary={true}
-          heatmap={heatMapData}
+          // heatmapLibrary={true}
+          // heatmap={heatMapData}
           overlay={() => {
-            
           }}
           onChange={this.onMapChange.bind(this)}
         >
+          {(this.state.currentBounds) && 
+            <GeneratedHeatMap
+              lat={this.state.currentBounds['nw'].lat}
+              lng={this.state.currentBounds['nw'].lng}
+              data={this.state.heatmapPoints}
+              socket={this.socket}
+            />
+          }
         </GoogleMapReact>
       </div>
     )

@@ -120,6 +120,7 @@ io.on('connection', (socket) => {
             const denom = 50;
 
             for (let i = 0; i < height/denom; i++) {
+                let output_row = [];
                 for (let j = 0; j < width/denom; j++) {
                     let latitude = current_bounds['se'].lat + latDiff * (i * denom + denom/2) / height;
                     let longitude = current_bounds['nw'].lng + lngDiff * (j * denom + denom/2) / width;
@@ -147,14 +148,17 @@ io.on('connection', (socket) => {
                         weight += v * dist_sum - d / dist_sum * distances.length;
                     }
 
-                    output_data.push({lat: latitude, lng: longitude, weight: weight});
+                    // output_data.push({lat: latitude, lng: longitude, weight: weight});
+                    output_row.push(weight);
                 }
+                output_data.push(output_row);
             }
 
             console.log("sending data");
-            socket.emit('data', 
-            [...current_values.map(({lat, lng, v}) => ({ lat: lat, lng: lng, weight: v })), 
-                ...output_data]);
+            // socket.emit('data', 
+            // [...current_values.map(({lat, lng, v}) => ({ lat: lat, lng: lng, weight: v })), 
+            //     ...output_data]);
+            socket.emit('data', output_data);
         }
 
     })

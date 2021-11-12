@@ -42,9 +42,6 @@ export default class Home extends Component {
     var rounded = new Date(Math.round(date.getTime() / coeff) * coeff)
 
     this.socket = io("ws://localhost:8080");
-    this.socket.on('data', (data) => {
-      console.log(data);
-    })
     this.count = 0;
     this.state.selectedDate = rounded;
     this.socket.send({date: rounded, time: rounded});
