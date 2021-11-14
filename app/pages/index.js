@@ -1,45 +1,47 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Container, Grid, Typography, Fab, CircularProgress } from '@material-ui/core'
+import { Grid, Fab, CircularProgress, Paper } from '@material-ui/core'
+import { TimePicker } from '@material-ui/pickers';
 import styles from '../styles/Home.module.css'
 import BottomNav from '../components/bottomNav'
 import HeatMap from '../components/HeatMap';
 import PollIcon from '@material-ui/icons/Poll';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { io } from 'socket.io-client';
-
-const testData = [
-    {
-        lat: -81.80833, 
-        lng: 26.13167,
-        weight: 2.4
-    },
-    {
-        lat: -81.87167, 
-        lng: 26.64833,
-        weight: -1.4
-    },
-];
-
-const getPixelPositionOffset = (width, height) => ({
-    x: -(width / 2),
-    y: -(height / 2),
-})
+import CustomDateTimePicker from '../components/CustomDateTimePicker';
+import DatumDialog from '../components/DatumDialog';
 
 export default class Home extends Component {
   
   constructor(props) {
     super(props);
     this.map = React.createRef();
-    this.socket = io("ws://localhost:8080");
-    this.socket.on('message', (data) => {
-      console.log("socket data", data);
-    });
     this.state = {
       center: {lat: 0, lng: 0},
       hasLocation: false,
     }
+    var coeff = 1000 * 60 * 6;
+    var date = new Date();
+    var rounded = new Date(Math.round(date.getTime() / coeff) * coeff)
+
+    this.socket = io("ws://localhost:8080");
     this.count = 0;
+    this.state.selectedDate = rounded;
+    this.socket.send({date: rounded, time: rounded});
+    this.handleDateChange = (val) => {
+      console.log(val);
+      this.state.time = new Date();
+    }
+
+    this.state.dialogOpen = false;
+    this.state.selectedDatum = 'Mean Tide Level';
+    this.handleDialogOpen = () => {
+      this.state.dialogOpen = true;
+    };
+    this.handleDialogClose = (value) => {
+      this.state.dialogOpen = false;
+      this.state.selectedDatum = value;
+    };
   }
 
   componentDidMount() {
@@ -51,7 +53,6 @@ export default class Home extends Component {
 
   render() {
     console.log("render");
-
     return (
       <Grid>
         <Head>
@@ -62,11 +63,24 @@ export default class Home extends Component {
         </Head>
 
         <main>
-          {this.state.hasLocation && <HeatMap/>}
-          {!this.state.hasLocation && <CircularProgress />}
-        </main>
-
-        <Fab 
+          {this.state.hasLocation && <HeatMap 
+            socket={this.socket}
+            onMapChange={(bounds, isVisible) => {
+              console.log("changed", bounds);
+              if (!isVisible) {
+                return
+              }
+          
+              bounds['width'] = window.innerWidth;
+              bounds['height'] = window.innerHeight;
+              bounds['time'] = this.state.selectedDate;
+              
+              console.log(bounds);
+              this.socket.send(bounds);
+            }}
+          />}
+          {!this.state.hasLocation && <CircularProgress/>}
+          <Fab 
             style={{
               margin: 0,
               top: 'auto',
@@ -77,14 +91,41 @@ export default class Home extends Component {
             }} 
             size="large" 
             color="primary"
-            onClick={() => {
-              this.socket.send("Fab Clicked");
-            }}
+            onClick={this.handleDialogOpen}
             >
-            <PollIcon />
-        </Fab>
+              <PollIcon />
+          </Fab>
+          <DatumDialog
+            selectedValue={this.state.selectedDatum}
+            open={this.state.dialogOpen}
+            onClose={this.handleDialogClose}
+          />
+          <Paper 
+          elevation={3}
+          style={{
+            margin: 0,
+            top: 'auto',
+            right: 75,
+            bottom: 75,
+            left: 'auto',
+            position: 'fixed',
+          }}>
+            <CustomDateTimePicker 
+              handleDateChange={(v) => {
+                this.socket.send({date: v});
+                this.setState({selectedDate: v});
+              }}
+              handleTimeChange={(v) => {
+                this.socket.send({time: v});
+                this.setState({selectedDate: v});
+              }}
+              selectedDate={this.state.selectedDate}
+            />
+          </Paper>
 
-        <BottomNav/>
+          <BottomNav/>
+        </main>
+
       </Grid>
     )
   }

@@ -1,6 +1,7 @@
 /* global google */
 import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
+import GeneratedHeatMap from '../components/GeneratedHeatMap'
 
 class HeatMap extends Component {
   static defaultProps = {
@@ -15,20 +16,19 @@ class HeatMap extends Component {
   	super(props)
   	this.state = {
       heatmapVisible: true,
-  		heatmapPoints: [
-		  		{lat: 26.13167, lng: -81.80833},
-					{lat: 26.64833, lng: -81.87167}
-				]
+  		heatmapPoints: [],
+      currentBounds: null
   	}
+    this.socket = props.socket;
+    this.socket.on('data', (data) => {
+      this.setState({heatmapPoints: data});
+    })
+    this.onMapUpdate = props.onMapChange;
   }
 
   onMapChange({ center, zoom, bounds, marginBounds }) {
-    if (!this.state.heatmapVisible) {
-      return
-    }
-    
-    console.log("onChange");
-    //this.socket.send(bounds, this.count++);
+    this.onMapUpdate(bounds, this.state.heatmapVisible);
+    this.setState({currentBounds: bounds});
   }
 
   toggleHeatMap() {    
@@ -43,17 +43,15 @@ class HeatMap extends Component {
   }
 
   render() {
-
-  	const apiKey = {key: 'AIzaSyBrP7CiMgD8kHYwIxKTU11FfP4CI0Gzfzw'}
+    console.log(this.state);
+  	const apiKey = { key: 'AIzaSyBrP7CiMgD8kHYwIxKTU11FfP4CI0Gzfzw' }
   	const heatMapData = {
   		positions: this.state.heatmapPoints,
-		options: {
-			radius: 20,
-			opacity: 0.6
-		}
+      options: {
+        radius: 75,
+        opacity: 0.4
+      }
   	}
-
-  	console.log(this.state)
 
     return (
       <div style={{ height: '100vh', width: '100%' }}>
@@ -62,10 +60,20 @@ class HeatMap extends Component {
           bootstrapURLKeys={apiKey}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
-          heatmapLibrary={true}
-          heatmap={heatMapData}
+          // heatmapLibrary={true}
+          // heatmap={heatMapData}
+          overlay={() => {
+          }}
           onChange={this.onMapChange.bind(this)}
         >
+          {(this.state.currentBounds) && 
+            <GeneratedHeatMap
+              lat={this.state.currentBounds['nw'].lat}
+              lng={this.state.currentBounds['nw'].lng}
+              data={this.state.heatmapPoints}
+              socket={this.socket}
+            />
+          }
         </GoogleMapReact>
       </div>
     )
