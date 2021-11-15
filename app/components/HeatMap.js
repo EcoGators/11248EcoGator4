@@ -49,7 +49,7 @@ class HeatMap extends Component {
   	const heatMapData = {
   		positions: this.state.heatmapPoints,
       options: {
-        radius: 75,
+        radius: 5,
         opacity: 0.4
       }
   	}

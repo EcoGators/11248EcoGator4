@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
             const begin_date = "" + now.getFullYear() + String("00" + now.getMonth()).slice(-2) + String("00" + now.getDate()).slice(-2);
             
             const output = await Promise.all(stations_in_bounds.map(async (s) => {
-                let stationData = await datums.getWaterLevel(begin_date, end_date, "MLLW", s.id, "LST_LDT");
+                let stationData = await datums.getWaterLevel(begin_date, end_date, "MTL", s.id, "LST_LDT");
                 return stationData.data;
             }));
 
@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
         if (current_bounds['se'] && current_bounds['nw'] && current_values.length > 0) {
             // generate heatmap data
             let output_data = [];
-            const denom = 50;
+            const denom = 5;
 
             for (let i = 0; i < height/denom; i++) {
                 for (let j = 0; j < width/denom; j++) {
@@ -153,7 +153,8 @@ io.on('connection', (socket) => {
 
             console.log("sending data");
             socket.emit('data', 
-            [...current_values.map(({lat, lng, v}) => ({ lat: lat, lng: lng, weight: v })), 
+            [
+                //...current_values.map(({lat, lng, v}) => ({ lat: lat, lng: lng, weight: v })), 
                 ...output_data]);
         }
 
