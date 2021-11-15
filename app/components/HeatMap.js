@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
 import { io } from 'socket.io-client'
+import GeneratedHeatMap from '../components/GeneratedHeatMap'
 
 class HeatMap extends Component {
   static defaultProps = {
@@ -68,6 +69,14 @@ class HeatMap extends Component {
           }}
           onChange={this.onMapChange.bind(this)}
         >
+          {(this.state.currentBounds) && 
+            <GeneratedHeatMap
+              lat={this.state.currentBounds['nw'].lat}
+              lng={this.state.currentBounds['nw'].lng}
+              data={this.state.heatmapPoints}
+              socket={this.socket}
+            />
+          }
         </GoogleMapReact>
       </div>
     )

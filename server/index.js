@@ -20,7 +20,6 @@ stations_promise.then((response) => {
 //     {id: 123456, lat: 12, lng: 12, value: 0.67}
 // ]
 
-
 const bounds = {
     nw: { lat: 30.26977518549468, lng: -84.62294643788536 },
     se: { lat: 23.897173070765405, lng: -78.31679409413536 },
@@ -86,7 +85,6 @@ io.on('connection', (socket) => {
             current_values = [];
 
             // find out if date is past or future
-
             for (let k in station_data_in_bounds) {
                 let s = station_data_in_bounds[k];
 
