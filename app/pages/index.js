@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Grid, Fab, CircularProgress, Paper } from '@material-ui/core'
+import { Grid, Fab, CircularProgress, Paper, Typography } from '@material-ui/core'
 import { TimePicker } from '@material-ui/pickers';
 import styles from '../styles/Home.module.css'
 import BottomNav from '../components/bottomNav'
@@ -9,6 +9,7 @@ import PollIcon from '@material-ui/icons/Poll';
 import React, { Component, Fragment } from 'react';
 import { io } from 'socket.io-client';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
+import DataSelectionButtons from '../components/DataSelectionButtons';
 
 const testData = [
     {
@@ -36,6 +37,7 @@ export default class Home extends Component {
     this.state = {
       center: {lat: 0, lng: 0},
       hasLocation: false,
+      selectedData: 'MTL'
     }
     var coeff = 1000 * 60 * 6;
     var date = new Date();
@@ -52,6 +54,18 @@ export default class Home extends Component {
       console.log(val);
       this.state.time = new Date();
     }
+
+    this.datum_desc = {
+      "HAT": "Highest Astronomical Tide",
+      "MHHW": "Mean Higher High Water",
+      "MHW": "Mean High Water",
+      "DTL": "Dinural Tide Level",
+      "MTL": "Mean Tide Level (6 min)",
+      "MSL": "Mean Sea Level",
+      "MLW": "Mean Low Water",
+      "MLLW": "Mean Lower Low Water",
+      "LAT": "Lowest Astronomical Tide"
+    };
   }
 
   componentDidMount() {
@@ -75,7 +89,6 @@ export default class Home extends Component {
           {this.state.hasLocation && <HeatMap 
             socket={this.socket}
             onMapChange={(bounds, isVisible) => {
-              console.log("changed", bounds);
               if (!isVisible) {
                 return
               }
@@ -83,29 +96,34 @@ export default class Home extends Component {
               bounds['width'] = window.innerWidth;
               bounds['height'] = window.innerHeight;
               bounds['time'] = this.state.selectedDate;
+              if (this.state.selectedData) {
+                bounds['type'] = this.state.selectedData;
+              }
               
-              console.log(bounds);
               this.socket.send(bounds);
             }}
           />}
           {!this.state.hasLocation && <CircularProgress/>}
-          <Fab 
-            style={{
-              margin: 0,
-              top: 'auto',
-              right: 'auto',
-              bottom: 75,
-              left: 20,
-              position: 'fixed',
-            }} 
-            size="large" 
-            color="primary"
-            onClick={() => {
-              // this.socket.send("Fab Clicked");
-            }}
-            >
-              <PollIcon />
-          </Fab>
+
+          <Typography variant="h5" align="center" gutterBottom 
+          style={{
+            position: 'fixed',
+            top: 'auto',
+            bottom: '75px',
+            left: '90px',
+            right: 'auto',
+            zIndex: '1000',
+            backgroundColor: 'white',
+            borderRadius: '5px',
+            padding: '10px',
+          }}> 
+            {this.datum_desc[this.state.selectedData]} 
+          </Typography>
+
+          <DataSelectionButtons 
+            onChange={(value) => {
+              this.setState({selectedData: value})
+            }} /> 
           <Paper 
           elevation={3}
           style={{
@@ -126,6 +144,7 @@ export default class Home extends Component {
                 this.setState({selectedDate: v});
               }}
               selectedDate={this.state.selectedDate}
+              selectedData={this.state.selectedData}
             />
           </Paper>
 

@@ -55,7 +55,7 @@ class HeatMap extends Component {
   	}
 
     return (
-      <div style={{ height: '100vh', width: '100%' }}>
+      <div style={{ height: 'calc(100vh - 56px)', width: '100%' }}>
         <GoogleMapReact
           ref={(el) => this._googleMap = el}
           bootstrapURLKeys={apiKey}
