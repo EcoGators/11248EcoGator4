@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Tooltip from '@mui/material/Tooltip';
 
 export default function DataSelectionButtons(props) {
   const [view, setView] = React.useState('MTL');
@@ -11,6 +12,18 @@ export default function DataSelectionButtons(props) {
   };
 
   const datums = ["HAT", "MHHW", "MHW", "DTL", "MTL", "MSL", "MLW", "MLLW", "LAT"]
+
+  const datum_desc = {
+    "HAT": "Highest Astronomical Tide",
+    "MHHW": "Mean Higher High Water",
+    "MHW": "Mean High Water",
+    "DTL": "Dinural Tide Level",
+    "MTL": "Mean Tide Level (6 min)",
+    "MSL": "Mean Sea Level",
+    "MLW": "Mean Low Water",
+    "MLLW": "Mean Lower Low Water",
+    "LAT": "Lowest Astronomical Tide"
+  };
 
   return (
     <ToggleButtonGroup
@@ -33,17 +46,19 @@ export default function DataSelectionButtons(props) {
     >      
       {datums.map((datum) => {
         return (
-          <ToggleButton
-            key={datum}
-            value={datum}
-            aria-label={datum}
-            label={datum}
-            style={{
-              padding: "0.25em",
-            }}
-          >
-            {datum}
-          </ToggleButton>
+          <Tooltip title={datum_desc[datum]} key={datum + "-tooltip"}>
+            <ToggleButton
+              key={datum}
+              value={datum}
+              aria-label={datum}
+              label={datum}
+              style={{
+                padding: "0.25em",
+              }}
+            >
+              {datum}
+            </ToggleButton>
+          </Tooltip>
         );
       })}
     </ToggleButtonGroup>
