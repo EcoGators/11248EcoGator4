@@ -158,7 +158,6 @@ io.on('connection', (socket) => {
             }
 
             current_values = current_values.map((v) => {
-                console.log(v);
                 return {lat: v.lat, lng: v.lng, name: v.name, value: v.v}
             });
 
@@ -167,7 +166,6 @@ io.on('connection', (socket) => {
                 stations: current_values
             }
 
-            console.log("sending data", station_data_in_bounds);
             socket.emit('data', out);
         }
 
