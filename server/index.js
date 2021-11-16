@@ -20,7 +20,6 @@ stations_promise.then((response) => {
 //     {id: 123456, lat: 12, lng: 12, value: 0.67}
 // ]
 
-
 const bounds = {
     nw: { lat: 30.26977518549468, lng: -84.62294643788536 },
     se: { lat: 23.897173070765405, lng: -78.31679409413536 },
@@ -38,7 +37,7 @@ function getStationsFromBounds(bounds) {
     });
 }
 
-// var current_bounds = 
+// var current_bounds =
 var station_data_in_bounds = [];
 var current_bounds = {};
 var current_selected_date_time = new Date();
@@ -71,7 +70,7 @@ io.on('connection', (socket) => {
             let now = current_selected_date_time;
             const end_date = "" + now.getFullYear() + String("00" + now.getMonth()).slice(-2) + String("00" + now.getDate()).slice(-2);
             const begin_date = "" + now.getFullYear() + String("00" + now.getMonth()).slice(-2) + String("00" + now.getDate()).slice(-2);
-            
+
             const output = await Promise.all(stations_in_bounds.map(async (s) => {
                 let stationData = await datums.getWaterLevel(begin_date, end_date, "MTL", s.id, "LST_LDT");
                 return stationData.data;
@@ -81,26 +80,30 @@ io.on('connection', (socket) => {
         }
 
         if (message.hasOwnProperty("time")) {
-            let t = new Date(message['time']);
-            current_selected_date_time.setTime(t.getTime());
-            current_values = [];
+            try {
+                let t = new Date(message['time']);
+                current_selected_date_time.setTime(t.getTime());
+                current_values = [];
 
-            // find out if date is past or future
+                // find out if date is past or future
+                for (let k in station_data_in_bounds) {
+                    let s = station_data_in_bounds[k];
 
-            for (let k in station_data_in_bounds) {
-                let s = station_data_in_bounds[k];
-
-                current_values[k] = s.data.find((d) => {
-                    let t = new Date(d.t);
-                    return t.getHours() == current_selected_date_time.getHours() &&
-                            t.getMinutes() == current_selected_date_time.getMinutes();
-                });
-                current_values[k]["id"] = s.metadata.id;
-                current_values[k]["lat"] = s.metadata.lat;
-                current_values[k]["lng"] = s.metadata.lon;
+                    current_values[k] = s.data.find((d) => {
+                        let t = new Date(d.t);
+                        return t.getHours() == current_selected_date_time.getHours() &&
+                                t.getMinutes() == current_selected_date_time.getMinutes();
+                    });
+                    current_values[k]["id"] = s.metadata.id;
+                    current_values[k]["lat"] = s.metadata.lat;
+                    current_values[k]["lng"] = s.metadata.lon;
+                    current_values[k]['name'] = s.metadata.name;
+                }
+            } catch (error) {
+                console.error(error);
             }
         }
-        
+
         if (message.hasOwnProperty("date")) {
             let t = new Date(message['date']);
             current_selected_date_time = t;
@@ -108,7 +111,7 @@ io.on('connection', (socket) => {
             let now = t;
             const end_date = "" + now.getFullYear() + String("00" + now.getMonth()).slice(-2) + String("00" + now.getDate()).slice(-2);
             const begin_date = "" + now.getFullYear() + String("00" + now.getMonth()).slice(-2) + String("00" + now.getDate()).slice(-2);
-            
+
             const output = await Promise.all(stations_in_bounds.map(async (s) => {
                 let stationData = await datums.getWaterLevel(begin_date, end_date, "MLLW", s.id, "LST_LDT");
                 return stationData.data;
@@ -137,12 +140,12 @@ io.on('connection', (socket) => {
                         let y2 = longitude - current_bounds['nw'].lng * (width / denom);
 
                         let dist = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-                        distances.push(dist);
+                        distances.push(dist * dist);
                     }
 
                     const dist_sum = distances.reduce((a,b) => a + b, 0);
                     let weight = 0;
-                    
+
                     for (let b in distances) {
                         let d = distances[b];
                         let v = current_values[b]['v'];
@@ -154,11 +157,18 @@ io.on('connection', (socket) => {
                 }
             }
 
-            console.log("sending data");
-            socket.emit('data', 
-            [
-                //...current_values.map(({lat, lng, v}) => ({ lat: lat, lng: lng, weight: v })), 
-                ...output_data]);
+            current_values = current_values.map((v) => {
+                console.log(v);
+                return {lat: v.lat, lng: v.lng, name: v.name, value: v.v}
+            });
+
+            const out = {
+                heatmap: output_data,
+                stations: current_values
+            }
+
+            console.log("sending data", station_data_in_bounds);
+            socket.emit('data', out);
         }
 
     })

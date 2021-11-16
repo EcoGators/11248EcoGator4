@@ -17,8 +17,8 @@ export default function BottomNav(props) {
         showLabels
         className={styles.bottomNav}
       >
-        <BottomNavigationAction label="Map" icon={<LocationOnIcon />} />
-        <BottomNavigationAction label="Reports" icon={<TimelineIcon />} />
+        <BottomNavigationAction label="Map" icon={<LocationOnIcon />} onclick={() => { window.location.href = "/"}} />
+        <BottomNavigationAction label="Reports" icon={<TimelineIcon />} onclick={() => { window.location.href = "/reports" }} />
         <BottomNavigationAction label="Preferences" icon={<SettingsIcon />} />
     </BottomNavigation>
     );
