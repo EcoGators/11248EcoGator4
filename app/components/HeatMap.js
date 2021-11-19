@@ -1,4 +1,6 @@
 /* global google */
+import React, { Component } from 'react'
+import GoogleMapReact from 'google-map-react'
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
 import { io } from 'socket.io-client';

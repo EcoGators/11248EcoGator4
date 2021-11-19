@@ -27,6 +27,44 @@ export default function DataSelectionButtons(props) {
   };
 
   return (
+    <ToggleButtonGroup
+      orientation="vertical"
+      color="primary"
+      value={view}
+      exclusive
+      required
+      onChange={handleChange}
+      style={{
+        margin: 0,
+        top: 'auto',
+        right: 'auto',
+        bottom: 75,
+        left: 20,
+        position: 'fixed',
+        backgroundColor: '#fff',
+      }}
+      size="large"
+    >      
+      {datums.map((datum) => {
+        return (
+          <Tooltip title={datum_desc[datum]} key={datum + "-tooltip"}>
+            <ToggleButton
+              key={datum}
+              value={datum}
+              aria-label={datum}
+              label={datum}
+              style={{
+                padding: "0.25em",
+              }}
+            >
+              {datum}
+            </ToggleButton>
+          </Tooltip>
+        );
+      })}
+    </ToggleButtonGroup>
+  );
+}
     <Paper
       elevation={3}
       style={{
