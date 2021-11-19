@@ -14,11 +14,13 @@ import DataSelectionButtons from '../components/DataSelectionButtons';
 const testData = [
     {
         lat: -81.80833, 
+        lat: -81.80833,
         lng: 26.13167,
         weight: 2.4
     },
     {
         lat: -81.87167, 
+        lat: -81.87167,
         lng: 26.64833,
         weight: -1.4
     },
@@ -30,7 +32,7 @@ const getPixelPositionOffset = (width, height) => ({
 })
 
 export default class Home extends Component {
-  
+
   constructor(props) {
     super(props);
     this.map = React.createRef();
@@ -91,20 +93,19 @@ export default class Home extends Component {
         </Head>
 
         <main>
-          {this.state.hasLocation && <HeatMap 
+          {this.state.hasLocation && <HeatMap
             socket={this.socket}
             onMapChange={(bounds, isVisible) => {
               if (!isVisible) {
                 return
               }
-          
+
               bounds['width'] = window.innerWidth;
               bounds['height'] = window.innerHeight;
               bounds['time'] = this.state.selectedDate;
               if (this.state.selectedData) {
                 bounds['type'] = this.state.selectedData;
               }
-              
               this.socket.send(bounds);
             }}
           />}
@@ -112,6 +113,9 @@ export default class Home extends Component {
 
           <Typography variant="h5" align="center" gutterBottom 
           style={{
+          <Paper
+            elevation={3}
+            style={{
             position: 'fixed',
             top: 'auto',
             bottom: '75px',
@@ -130,6 +134,17 @@ export default class Home extends Component {
               this.setState({selectedData: value})
             }} /> 
           <Paper 
+          }}>
+            <Typography variant="h5" align="center">
+              {this.datum_desc[this.state.selectedData]}
+            </Typography>
+          </Paper>
+
+          <DataSelectionButtons
+            onChange={(value) => {
+              this.setState({selectedData: value})
+            }} />
+          <Paper
           elevation={3}
           style={{
             margin: 0,
@@ -139,7 +154,7 @@ export default class Home extends Component {
             left: 'auto',
             position: 'fixed',
           }}>
-            <CustomDateTimePicker 
+            <CustomDateTimePicker
               handleDateChange={(v) => {
                 this.socket.send({date: v});
                 this.setState({selectedDate: v});

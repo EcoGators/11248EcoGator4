@@ -12,6 +12,16 @@ Member3: Hyeongbeen Joo (Development Team)
 
 Member4: Dylan Morrissey (Development Team) 
 
+## Required Tools
+
+The only required tool to run this program is [Docker](https://docs.docker.com/get-docker/) since all required packages 
+are installed automatically during the Docker build.
+
+## Running Program
+
+Simply install Docker, clone the repository and run this command `docker-compose up --build`.
+This will build the docker containers and run the webserver at `http://localhost:3000` and the websocket at `http://localhost:8080`.
+
 # What will your team build and what tools/programming language will your team use? 
 
 We are building a data-driven tide forecasting web application by using machine learning (ML) techniques. The programming language will be used is React (front-end JavaScript library for building user interfaces). We will also use the React libraries Material-UI and Google Charts to help visualize the data in a clean webpage. We plan to use the Tommorrow.io API for general information and actual tide data from NOAA to train our models. We will use Tensorflow to train our machine learning models.

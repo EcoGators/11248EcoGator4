@@ -2,6 +2,7 @@ import Head from 'next/head'
 import { Grid, Typography } from '@material-ui/core'
 import React, { Component } from 'react';
 import BottomNav from '../components/bottomNav';
+import Chart from "react-google-charts";
 
 export default class Reports extends Component {
   

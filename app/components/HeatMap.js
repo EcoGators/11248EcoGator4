@@ -1,6 +1,12 @@
 /* global google */
 import React, { Component } from 'react'
 import GoogleMapReact from 'google-map-react'
+import React, { Component } from 'react';
+import GoogleMapReact from 'google-map-react';
+import { io } from 'socket.io-client';
+import GeneratedHeatMap from '../components/GeneratedHeatMap';
+import CloudCircleIcon from '@mui/icons-material/CloudCircle';
+import Tooltip from '@mui/material/Tooltip';
 
 class HeatMap extends Component {
   static defaultProps = {
@@ -15,28 +21,30 @@ class HeatMap extends Component {
   	super(props)
   	this.state = {
       heatmapVisible: true,
-  		heatmapPoints: [],
-      currentBounds: null
+  		heatmapPoints: [
+		  		{lat: 26.13167, lng: -81.80833, weight: 1.2},
+					{lat: 26.64833, lng: -81.87167, weight: 0.7}
+				],
+      stations: []
   	}
     this.socket = props.socket;
     this.socket.on('data', (data) => {
-      this.setState({heatmapPoints: data});
+      this.setState({heatmapPoints: data['heatmap'], stations: data['stations']});
     })
     this.onMapUpdate = props.onMapChange;
   }
 
   onMapChange({ center, zoom, bounds, marginBounds }) {
     this.onMapUpdate(bounds, this.state.heatmapVisible);
-    this.setState({currentBounds: bounds});
   }
 
-  toggleHeatMap() {    
+  toggleHeatMap() {
     this.setState({
       heatmapVisible: !this.state.heatmapVisible
     }, () => {
       if (this._googleMap !== undefined) {
         this._googleMap.heatmap.setMap(this.state.heatmapVisible ? this._googleMap.map_ : null)
-      }      
+      }
     })
 
   }
@@ -47,24 +55,32 @@ class HeatMap extends Component {
   	const heatMapData = {
   		positions: this.state.heatmapPoints,
       options: {
-        radius: 75,
+        radius: 5,
         opacity: 0.4
       }
   	}
 
     return (
-      <div style={{ height: '100vh', width: '100%' }}>
+      <div style={{ height: 'calc(100vh - 56px)', width: '100%' }}>
         <GoogleMapReact
           ref={(el) => this._googleMap = el}
           bootstrapURLKeys={apiKey}
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
-          // heatmapLibrary={true}
-          // heatmap={heatMapData}
+          heatmapLibrary={true}
+          heatmap={heatMapData}
           overlay={() => {
+
           }}
           onChange={this.onMapChange.bind(this)}
         >
+          {this.state.stations.map((station) => {
+            return (
+              <Tooltip title={station.name + ": " + station.value + "ft"} lat={station.lat} lng={station.lng}>
+                <CloudCircleIcon />
+              </Tooltip>
+            );
+          })}
         </GoogleMapReact>
       </div>
     )

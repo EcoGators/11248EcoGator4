@@ -19,8 +19,10 @@ function CustomDateTimePicker(props) {
         <Grid alignContent="center" style={{ margin: "1em" }}>
             <h3> Select Date &amp; Time </h3>
             <DatePicker value={props.selectedDate} onChange={props.handleDateChange} />
-            <TimePicker value={props.selectedDate} onChange={props.handleTimeChange}
-                minutesStep={6} />
+            {props.selectedData == 'MTL' && (
+              <TimePicker value={props.selectedDate} onChange={props.handleTimeChange}
+              minutesStep={6} />
+            )}
             <IconButton> <PlayCircleFilled /> </IconButton>
         </Grid>
     </MuiPickersUtilsProvider>
