@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Grid, Fab, CircularProgress, Paper } from '@material-ui/core'
+import { Grid, Fab, CircularProgress, Paper, Typography } from '@material-ui/core'
 import { TimePicker } from '@material-ui/pickers';
 import styles from '../styles/Home.module.css'
 import BottomNav from '../components/bottomNav'
@@ -9,7 +9,25 @@ import PollIcon from '@material-ui/icons/Poll';
 import React, { Component, Fragment } from 'react';
 import { io } from 'socket.io-client';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
-import DatumDialog from '../components/DatumDialog';
+import DataSelectionButtons from '../components/DataSelectionButtons';
+
+const testData = [
+    {
+        lat: -81.80833, 
+        lng: 26.13167,
+        weight: 2.4
+    },
+    {
+        lat: -81.87167, 
+        lng: 26.64833,
+        weight: -1.4
+    },
+];
+
+const getPixelPositionOffset = (width, height) => ({
+    x: -(width / 2),
+    y: -(height / 2),
+})
 
 export default class Home extends Component {
   
@@ -19,12 +37,16 @@ export default class Home extends Component {
     this.state = {
       center: {lat: 0, lng: 0},
       hasLocation: false,
+      selectedData: 'MTL'
     }
     var coeff = 1000 * 60 * 6;
     var date = new Date();
     var rounded = new Date(Math.round(date.getTime() / coeff) * coeff)
 
     this.socket = io("ws://localhost:8080");
+    this.socket.on('data', (data) => {
+      console.log(data);
+    })
     this.count = 0;
     this.state.selectedDate = rounded;
     this.socket.send({date: rounded, time: rounded});
@@ -33,26 +55,32 @@ export default class Home extends Component {
       this.state.time = new Date();
     }
 
-    this.state.dialogOpen = false;
-    this.state.selectedDatum = 'Mean Tide Level';
-    this.handleDialogOpen = () => {
-      this.state.dialogOpen = true;
-    };
-    this.handleDialogClose = (value) => {
-      this.state.dialogOpen = false;
-      this.state.selectedDatum = value;
+    this.datum_desc = {
+      "HAT": "Highest Astronomical Tide",
+      "MHHW": "Mean Higher High Water",
+      "MHW": "Mean High Water",
+      "DTL": "Dinural Tide Level",
+      "MTL": "Mean Tide Level (6 min)",
+      "MSL": "Mean Sea Level",
+      "MLW": "Mean Low Water",
+      "MLLW": "Mean Lower Low Water",
+      "LAT": "Lowest Astronomical Tide"
     };
   }
 
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log("position", position);
-      this.setState({center: {lat: position.coords.latitude, lng: position.coords.longitude}, hasLocation: true})
-    });
+    try {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("position", position);
+        this.setState({center: {lat: position.coords.latitude, lng: position.coords.longitude}, hasLocation: true})
+      });
+    }
+    catch (error) {
+      this.setState({center: {lat: 28, lng: -82}, hasLocation: true})
+    }
   }
 
   render() {
-    console.log("render");
     return (
       <Grid>
         <Head>
@@ -66,7 +94,6 @@ export default class Home extends Component {
           {this.state.hasLocation && <HeatMap 
             socket={this.socket}
             onMapChange={(bounds, isVisible) => {
-              console.log("changed", bounds);
               if (!isVisible) {
                 return
               }
@@ -74,32 +101,34 @@ export default class Home extends Component {
               bounds['width'] = window.innerWidth;
               bounds['height'] = window.innerHeight;
               bounds['time'] = this.state.selectedDate;
+              if (this.state.selectedData) {
+                bounds['type'] = this.state.selectedData;
+              }
               
-              console.log(bounds);
               this.socket.send(bounds);
             }}
           />}
           {!this.state.hasLocation && <CircularProgress/>}
-          <Fab 
-            style={{
-              margin: 0,
-              top: 'auto',
-              right: 'auto',
-              bottom: 75,
-              left: 20,
-              position: 'fixed',
-            }} 
-            size="large" 
-            color="primary"
-            onClick={this.handleDialogOpen}
-            >
-              <PollIcon />
-          </Fab>
-          <DatumDialog
-            selectedValue={this.state.selectedDatum}
-            open={this.state.dialogOpen}
-            onClose={this.handleDialogClose}
-          />
+
+          <Typography variant="h5" align="center" gutterBottom 
+          style={{
+            position: 'fixed',
+            top: 'auto',
+            bottom: '75px',
+            left: '90px',
+            right: 'auto',
+            zIndex: '1000',
+            backgroundColor: 'white',
+            borderRadius: '5px',
+            padding: '10px',
+          }}> 
+            {this.datum_desc[this.state.selectedData]} 
+          </Typography>
+
+          <DataSelectionButtons 
+            onChange={(value) => {
+              this.setState({selectedData: value})
+            }} /> 
           <Paper 
           elevation={3}
           style={{
@@ -120,6 +149,7 @@ export default class Home extends Component {
                 this.setState({selectedDate: v});
               }}
               selectedDate={this.state.selectedDate}
+              selectedData={this.state.selectedData}
             />
           </Paper>
 
