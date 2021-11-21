@@ -1,35 +1,11 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Grid, Fab, CircularProgress, Paper, Typography } from '@material-ui/core'
-import { TimePicker } from '@material-ui/pickers';
-import styles from '../styles/Home.module.css'
+import { Grid, CircularProgress, Paper, Typography } from '@material-ui/core'
 import BottomNav from '../components/bottomNav'
 import HeatMap from '../components/HeatMap';
-import PollIcon from '@material-ui/icons/Poll';
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { io } from 'socket.io-client';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import DataSelectionButtons from '../components/DataSelectionButtons';
-
-const testData = [
-    {
-        lat: -81.80833, 
-        lat: -81.80833,
-        lng: 26.13167,
-        weight: 2.4
-    },
-    {
-        lat: -81.87167, 
-        lat: -81.87167,
-        lng: 26.64833,
-        weight: -1.4
-    },
-];
-
-const getPixelPositionOffset = (width, height) => ({
-    x: -(width / 2),
-    y: -(height / 2),
-})
 
 export default class Home extends Component {
 
