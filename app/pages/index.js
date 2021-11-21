@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { io } from 'socket.io-client';
 import CustomDateTimePicker from '../components/CustomDateTimePicker';
 import DataSelectionButtons from '../components/DataSelectionButtons';
+
 export default class Home extends Component {
 
   constructor(props) {
@@ -46,10 +47,15 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      console.log("position", position);
-      this.setState({center: {lat: position.coords.latitude, lng: position.coords.longitude}, hasLocation: true})
-    });
+    try {
+      navigator.geolocation.getCurrentPosition((position) => {
+        console.log("position", position);
+        this.setState({center: {lat: position.coords.latitude, lng: position.coords.longitude}, hasLocation: true})
+      });
+    }
+    catch (error) {
+      this.setState({center: {lat: 28, lng: -82}, hasLocation: true})
+    }
   }
 
   render() {
@@ -76,12 +82,13 @@ export default class Home extends Component {
               if (this.state.selectedData) {
                 bounds['type'] = this.state.selectedData;
               }
-
               this.socket.send(bounds);
             }}
           />}
           {!this.state.hasLocation && <CircularProgress/>}
 
+          <Typography variant="h5" align="center" gutterBottom 
+          style={{
           <Paper
             elevation={3}
             style={{
@@ -94,6 +101,15 @@ export default class Home extends Component {
             backgroundColor: 'white',
             borderRadius: '5px',
             padding: '10px',
+          }}> 
+            {this.datum_desc[this.state.selectedData]} 
+          </Typography>
+
+          <DataSelectionButtons 
+            onChange={(value) => {
+              this.setState({selectedData: value})
+            }} /> 
+          <Paper 
           }}>
             <Typography variant="h5" align="center">
               {this.datum_desc[this.state.selectedData]}

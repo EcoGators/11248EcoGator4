@@ -5,6 +5,16 @@
     "ws": "^8.2.3"
   },
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "test": "jest --watchAll"
+
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^12.1.2",
+    "babel-jest": "^27.3.1",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.3.1",
+    "react-test-renderer": "^17.0.2"
   }
 }
